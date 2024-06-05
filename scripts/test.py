@@ -13,12 +13,12 @@ print("Done")
 model = load_model("../models/mobil_dense_stack_v1.keras")
 
 # Load the test image
-test_image_path = "../showcase_images/pneumonia_1.jpg"
-test_image_path = "../showcase_images/pneumonia_3.jpg"
+test_image_path = "../images/showcase_images/pneumonia_1.jpg"
+test_image_path = "../images/showcase_images/pneumonia_3.jpg"
 # test_image_path = '../showcase_images/normal_1.jpg'
 
 # Create a list of test images that are within the showcase_images folder
-test_images = os.listdir("../showcase_images")
+test_images = os.listdir("../images/showcase_images")
 # Leave only the images that have the .jpg and .webp extensions
 test_images = [
     image
@@ -69,7 +69,7 @@ def interpret_prediction(prediction):
 # Make prediction for all images in the showcase_images folder
 for image in test_images:
     prediction = interpret_prediction(
-        predict_image("../showcase_images/" + image, model)
+        predict_image("../images/showcase_images/" + image, model)
     )
     print(f"{image} is {prediction}")
 
@@ -90,7 +90,7 @@ def get_images_from_folder(folder_path):
     return images
 
 
-test_image_folder = "../showcase_images/New-CNP-Dataset/validation"
+test_image_folder = "../images/showcase_images/New-CNP-Dataset/validation"
 # Make sure that labels are only folders and not files
 labels = [
     label
@@ -136,7 +136,7 @@ sns.heatmap(conf_matrix, annot=True, fmt="d")
 plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.title("Stacked Model\nConfusion Matrix")
-plt.savefig("../stacked_model_confusion_matrix.png")
+# plt.savefig("../stacked_model_confusion_matrix.png")
 plt.show()
 
 print("Done")
