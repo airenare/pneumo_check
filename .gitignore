@@ -277,3 +277,6 @@ media
 
 # images folder
 images/
+models/Pneumonia_ROC_0975_cutoff_024.zip
+models/Pneumonia_medai_065_cutoff.zip
+models/kaggle/working/export/Pneumonia_ROC_0975_cutoff_024.keras
