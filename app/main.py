@@ -1,10 +1,53 @@
 # Import libraries only once when the server is started
 import streamlit as st
+# import pandas as pd
 
 # Streamlit app
+st.set_page_config(page_title='PneumoCheck', layout='wide')
+col1, col2 = st.columns([1, 2])
 
-st.set_page_config(page_title='Pneumonia Classifier', layout='wide')
-st.title('Pneumonia Classifier')
+with col1:
+    st.image('pneumocheck_detailed_logo.png', width=120, use_column_width=False)
+with col2:
+    st.title('PneumoCheck')
+    st.write('Predict pneumonia from chest X-ray images.')
+
+# Sidebar
+st.sidebar.markdown('''
+# About the model
+- The model is based on the [InceptionV3](https://keras.io/api/applications/inceptionv3/) model with 
+[ImageNet](https://www.image-net.org/) weights.
+- Additional layers were added and tuned on the Chest X-Ray datasets from Kaggle 
+[[1]](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia) 
+[[2]](https://www.kaggle.com/datasets/salonimate/covid-pneumonia-nomal-xray).
+- The model achieved an AUC-ROC score of 0.984:
+''')
+st.sidebar.image('roc_curve.png', use_column_width=True)
+st.sidebar.markdown('''
+- The confusion matrix shows the model's performance on a test set of 1525 images:
+''')
+st.sidebar.image('confusion_matrix.png', use_column_width=True)
+st.sidebar.markdown('''
+- The cutoff probability was set to 0.24 to maximize both Sensitivity and Specificity. But it can be adjusted to suit 
+the use case.
+''')
+st.sidebar.image('performance_hist.png', use_column_width=True)
+
+# Sidebar footer copyright
+st.sidebar.markdown("""
+    <style>
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: left;
+        padding: 20px;
+        color: #aaaaaa;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+st.sidebar.markdown('<div class="footer">© Anton Bakulin 2024</div>', unsafe_allow_html=True)
 
 image_width, image_height = 256, 256
 
@@ -93,6 +136,7 @@ uploaded_files = st.file_uploader('Choose an image...',
                                   type=['jpg', 'jpeg', 'png', 'webp', 'heic'],
                                   accept_multiple_files=True,
                                   label_visibility='collapsed')
+predictions = {}
 if uploaded_files is not None:
     for uploaded_file in uploaded_files:
         image = Image.open(uploaded_file)
@@ -101,7 +145,7 @@ if uploaded_files is not None:
 
         prediction = predict_image(uploaded_file)
         label = interpret_prediction(prediction)
-
+        predictions[uploaded_file.name] = [label, prediction]
 
 
         # Set border class based on prediction
@@ -113,5 +157,16 @@ if uploaded_files is not None:
                             <p>Prediction: {label} | Probability: {prediction:.2f}</p>
                             <hr>
                             """, unsafe_allow_html=True)
+    # Predictions dataframe from the predictions dictionary
+    import pandas as pd
+    predictions_df = pd.DataFrame(predictions).T.reset_index()
 
-# Predictions dataframe
+if predictions:
+    # Set column names
+    predictions_df.columns = ['File Name', 'Predicted Label', 'Probability']
+    st.write(predictions_df)
+    # Button to save predictions to a CSV file with download location dialog
+    st.download_button(label='Download predictions',
+                       data=predictions_df.to_csv(index=False),
+                       file_name='predictions.csv',
+                       mime='text/csv')
