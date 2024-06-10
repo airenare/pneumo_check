@@ -63,10 +63,10 @@ st.markdown("""
         display: inline-block;
     }
     .normal-border {
-        border-color: green !important;        
+        border-color: #32cd33 !important;        
     }
     .pneumonia-border {
-        border-color: red !important;
+        border-color: #ff4500 !important;
     }
     </style>
     """, unsafe_allow_html=True)
