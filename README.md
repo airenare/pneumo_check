@@ -1,4 +1,6 @@
-# Pneumonia Detection in Chest X-rays Using Convolutional Neural Networks
+# PneumoCheck 
+Pneumonia Detection in Chest X-rays Using Convolutional Neural Networks
+
 
 ## Overview
 This project aims to develop a convolutional neural network (CNN) to classify chest X-ray images into two categories: normal (no pneumonia) and pneumonia (infected). The project includes data preprocessing, model development and training, evaluation, and a web application for real-time prediction.
@@ -35,7 +37,7 @@ Multiple CNN architectures were explored, including baseline models, deeper arch
 Models were evaluated using confusion matrices and metrics such as accuracy, precision, recall, F1-score, and ROC-AUC. 
 ![CM](https://github.com/airenare/pneumonia_xray/blob/main/app/confusion_matrix.png?raw=true)
 
-All possible classification cutoff points were assessed:
+All possible classification cutoff points were assessed, and the best one was determined to be 0.24:
 
 ![Cutoff](https://github.com/airenare/pneumonia_xray/blob/main/app/performance_hist.png?raw=true)
 
