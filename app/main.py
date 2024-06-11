@@ -144,6 +144,7 @@ if model:
                                     accept_multiple_files=True,
                                     label_visibility='collapsed')
     predictions = {}
+    col1, col2, col3 = st.columns([1, 3, 1])
     if uploaded_files is not None:
         for uploaded_file in uploaded_files:
             image = Image.open(uploaded_file)
@@ -157,13 +158,15 @@ if model:
 
             # Set border class based on prediction
             border_class = "normal-border" if label == "NORMAL" else "pneumonia-border"
-            st.markdown(f"""
-                                <div class="uploaded-image {border_class}">
-                                    <img src="data:image/jpeg;base64,{img_base64}" width="500"/>
-                                </div>
-                                <p>Prediction: {label} | Score: {prediction:.2f}</p>
-                                <hr>
-                                """, unsafe_allow_html=True)
+            with col2:
+                st.markdown(f"""
+                                    <div class="uploaded-image {border_class}">
+                                        <img src="data:image/jpeg;base64,{img_base64}" width="500"/>
+                                    </div>
+                                    <p>Prediction: {label} | Score: {prediction:.2f}</p>
+                                    <hr>
+                                    """, unsafe_allow_html=True)
+                # st.markdown(f"__________________________")
         # Predictions dataframe from the predictions dictionary
         import pandas as pd
         predictions_df = pd.DataFrame(predictions).T.reset_index()
