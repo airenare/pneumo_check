@@ -94,9 +94,15 @@ np, Image, load_model, base64 = load_libraries()
 
 # Load the model
 cutoff = 0.24
-model_path = '../models/kaggle/working/export/Pneumonia_ROC_0975_cutoff_024.keras'
-model = init_model(model_path)
+model_path = '../models/Pneumonia_ROC_0975_cutoff_024.keras'
+model = None
 
+try:
+    model = init_model(model_path)
+except ValueError:
+    st.error('Model not found!\n\nPlease download it from \
+        [HuggingFace](https://huggingface.co/airenare/InceptionV3_Pneumonia_CNN_v1/resolve/main/Pneumonia_ROC_0975_cutoff_024.keras?download=true)\
+            (1.89 GB) and put it in the __/models__ folder.')
 
 # Function to convert image to base64
 def image_to_base64(image):
@@ -132,41 +138,42 @@ def interpret_prediction(prediction):
 
 
 # make image uploader that supports drag and drop and multiple files
-uploaded_files = st.file_uploader('Choose an image...',
-                                  type=['jpg', 'jpeg', 'png', 'webp', 'heic'],
-                                  accept_multiple_files=True,
-                                  label_visibility='collapsed')
-predictions = {}
-if uploaded_files is not None:
-    for uploaded_file in uploaded_files:
-        image = Image.open(uploaded_file)
-        # Convert image to base64
-        img_base64 = image_to_base64(image)
+if model:
+    uploaded_files = st.file_uploader('Choose an image...',
+                                    type=['jpg', 'jpeg', 'png', 'webp', 'heic'],
+                                    accept_multiple_files=True,
+                                    label_visibility='collapsed')
+    predictions = {}
+    if uploaded_files is not None:
+        for uploaded_file in uploaded_files:
+            image = Image.open(uploaded_file)
+            # Convert image to base64
+            img_base64 = image_to_base64(image)
 
-        prediction = predict_image(uploaded_file)
-        label = interpret_prediction(prediction)
-        predictions[uploaded_file.name] = [label, prediction]
+            prediction = predict_image(uploaded_file)
+            label = interpret_prediction(prediction)
+            predictions[uploaded_file.name] = [label, prediction]
 
 
-        # Set border class based on prediction
-        border_class = "normal-border" if label == "NORMAL" else "pneumonia-border"
-        st.markdown(f"""
-                            <div class="uploaded-image {border_class}">
-                                <img src="data:image/jpeg;base64,{img_base64}" width="500"/>
-                            </div>
-                            <p>Prediction: {label} | Probability: {prediction:.2f}</p>
-                            <hr>
-                            """, unsafe_allow_html=True)
-    # Predictions dataframe from the predictions dictionary
-    import pandas as pd
-    predictions_df = pd.DataFrame(predictions).T.reset_index()
+            # Set border class based on prediction
+            border_class = "normal-border" if label == "NORMAL" else "pneumonia-border"
+            st.markdown(f"""
+                                <div class="uploaded-image {border_class}">
+                                    <img src="data:image/jpeg;base64,{img_base64}" width="500"/>
+                                </div>
+                                <p>Prediction: {label} | Score: {prediction:.2f}</p>
+                                <hr>
+                                """, unsafe_allow_html=True)
+        # Predictions dataframe from the predictions dictionary
+        import pandas as pd
+        predictions_df = pd.DataFrame(predictions).T.reset_index()
 
-if predictions:
-    # Set column names
-    predictions_df.columns = ['File Name', 'Predicted Label', 'Probability']
-    st.write(predictions_df)
-    # Button to save predictions to a CSV file with download location dialog
-    st.download_button(label='Download predictions',
-                       data=predictions_df.to_csv(index=False),
-                       file_name='predictions.csv',
-                       mime='text/csv')
+    if predictions:
+        # Set column names
+        predictions_df.columns = ['File Name', 'Predicted Label', 'Score']
+        st.write(predictions_df)
+        # Button to save predictions to a CSV file with download location dialog
+        st.download_button(label='Download predictions',
+                        data=predictions_df.to_csv(index=False),
+                        file_name='predictions.csv',
+                        mime='text/csv')
