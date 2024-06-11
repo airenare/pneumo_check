@@ -57,7 +57,7 @@ A [Streamlit](https://streamlit.io/) web application is provided to demonstrate 
 1. Clone the repository:
    ```bash
    git clone https://github.com/airenare/pneumonia_xray.git
-   cd pneumonia-detection
+   cd pneumonia_xray
    ```
 2. Install the required packages:
 ```
