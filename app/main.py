@@ -1,5 +1,6 @@
 # Import libraries only once when the server is started
 import streamlit as st
+
 # import pandas as pd
 
 # Streamlit app
@@ -7,7 +8,7 @@ st.set_page_config(page_title='PneumoCheck', page_icon='🦠', initial_sidebar_s
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.image('pneumocheck_detailed_logo.png', width=120, use_column_width=False)
+    st.image('pictures/pneumocheck_detailed_logo.png', width=120, use_column_width=False)
 with col2:
     st.title('PneumoCheck')
     st.write('Predict pneumonia from chest X-ray images.')
@@ -22,16 +23,16 @@ st.sidebar.markdown('''
 [[2]](https://www.kaggle.com/datasets/salonimate/covid-pneumonia-nomal-xray).
 - The model achieved an AUC-ROC score of 0.984:
 ''')
-st.sidebar.image('roc_curve.png', use_column_width=True)
+st.sidebar.image('pictures/roc_curve.png', use_column_width=True)
 st.sidebar.markdown('''
 - The confusion matrix shows the model's performance on a test set of 1525 images:
 ''')
-st.sidebar.image('confusion_matrix.png', use_column_width=True)
+st.sidebar.image('pictures/confusion_matrix.png', use_column_width=True)
 st.sidebar.markdown('''
 - The cutoff probability was set to 0.24 to maximize both Sensitivity and Specificity. But it can be adjusted to suit 
 the use case.
 ''')
-st.sidebar.image('performance_hist.png', use_column_width=True)
+st.sidebar.image('pictures/performance_hist.png', use_column_width=True)
 
 # Sidebar footer copyright
 st.sidebar.markdown("""
@@ -50,7 +51,6 @@ st.sidebar.markdown("""
 st.sidebar.markdown('<div class="footer">© Anton Bakulin 2024</div>', unsafe_allow_html=True)
 
 image_width, image_height = 256, 256
-
 
 # CSS to style the image uploader and the predicted images
 st.markdown("""
@@ -84,8 +84,10 @@ def load_libraries():
 
 
 @st.cache_resource
-def init_model(model_path):
-    model = load_model(model_path)
+def init_model(weights_folder):
+    # model = load_model(model_path)
+    from model.build_model import build_model
+    model = build_model(weights_folder=weights_folder)
     print('Model cached')
     return model
 
@@ -94,15 +96,18 @@ np, Image, load_model, base64 = load_libraries()
 
 # Load the model
 cutoff = 0.24
-model_path = '../models/Pneumonia_ROC_0975_cutoff_024.keras'
+weights_folder = 'model/weights'
+# model_path = '../models/Pneumonia_ROC_0975_cutoff_024.keras'
+
 model = None
 
 try:
-    model = init_model(model_path)
+    model = init_model(weights_folder=weights_folder)
 except ValueError:
     st.error('Model not found!\n\nPlease download it from \
         [HuggingFace](https://huggingface.co/airenare/InceptionV3_Pneumonia_CNN_v1/resolve/main/Pneumonia_ROC_0975_cutoff_024.keras?download=true)\
             (1.89 GB) and put it in the __/models__ folder.')
+
 
 # Function to convert image to base64
 def image_to_base64(image):
@@ -110,7 +115,6 @@ def image_to_base64(image):
     buffered = BytesIO()
     image.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode()
-
 
 
 def load_image_into_numpy_array(image):
@@ -135,14 +139,12 @@ def interpret_prediction(prediction):
         return 'PNEUMONIA'
 
 
-
-
 # make image uploader that supports drag and drop and multiple files
 if model:
     uploaded_files = st.file_uploader('Choose an image...',
-                                    type=['jpg', 'jpeg', 'png', 'webp', 'heic'],
-                                    accept_multiple_files=True,
-                                    label_visibility='collapsed')
+                                      type=['jpg', 'jpeg', 'png', 'webp', 'heic'],
+                                      accept_multiple_files=True,
+                                      label_visibility='collapsed')
     predictions = {}
     col1, col2, col3 = st.columns([1, 3, 1])
     if uploaded_files is not None:
@@ -155,11 +157,11 @@ if model:
             label = interpret_prediction(prediction)
             predictions[uploaded_file.name] = [label, prediction]
 
-
             # Set border class based on prediction
             border_class = "normal-border" if label == "NORMAL" else "pneumonia-border"
             with col2:
                 st.markdown(f"""
+                                    <li>{uploaded_file.name}</li>
                                     <div class="uploaded-image {border_class}">
                                         <img src="data:image/jpeg;base64,{img_base64}" width="500"/>
                                     </div>
@@ -177,6 +179,6 @@ if model:
         st.write(predictions_df)
         # Button to save predictions to a CSV file with download location dialog
         st.download_button(label='Download predictions',
-                        data=predictions_df.to_csv(index=False),
-                        file_name='predictions.csv',
-                        mime='text/csv')
+                           data=predictions_df.to_csv(index=False),
+                           file_name='predictions.csv',
+                           mime='text/csv')
