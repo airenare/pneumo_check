@@ -20,7 +20,10 @@ The dataset used is a combined datasets: the [Chest X-ray Images (Pneumonia)](ht
   - `pneumonia-inceptionv3.ipynb` - to be renamed to `04_Transfer_Learning.ipynb`
 - **app/**: Contains the Streamlit web application.
   - `main.py`
-- **models/**: Put the [final model](https://huggingface.co/airenare/InceptionV3_Pneumonia_CNN_v1/blob/main/Pneumonia_ROC_0975_cutoff_024.keras) here (1.89 GB).
+- **models/**: The final model is 
+	- The final model file is 1.89 GB, so it is not uploaded here.
+ 	- To build the model, you can run the __/scripts/build_model.py__ script. It will build a model from InceptionV3, add new layers and weights, and save the model to the /models directory. The same logic is implemented in the application (app/main.py), but the model is cached and not saved to the disk.
+ 	- It can also be downloaded from the [HuggingFace](https://huggingface.co/airenare/InceptionV3_Pneumonia_CNN_v1/blob/main/Pneumonia_ROC_0975_cutoff_024.keras) (1.89 GB).
 - **scripts/**: Contains data loading/wrangling script `data_preprocessing.py` and other testing scripts.
 - **example_images/**: Contains images for the app's showcase.
 
