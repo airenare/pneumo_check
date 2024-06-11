@@ -38,7 +38,9 @@ def predict_image(image_path, model):
 
 # Load the model
 model_path = '../models/kaggle/working/export/Pneumonia_ROC_0975_cutoff_024.keras'
-model = tf.keras.models.load_model(model_path)
+from build_model import build_model
+model = build_model('../app/model/weights')
+# model = tf.keras.models.load_model(model_path)
 # model = tf.keras.models.load_model('../models/model_final_1/model_final_1.keras')
 
 # Prefiction's cutoff

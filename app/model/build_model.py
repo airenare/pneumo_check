@@ -37,8 +37,10 @@ def build_model(weights_folder):
     for i in range(4):  # Get the last 4 layers (Flatten, Dense, Dropout, Dense)
         layer_weights = []
         for j in range(len(model.layers[-4:][i].get_weights())):
+            # print(i, j)
             weight = np.load(f'{weights_folder}/additional_layer_{i}_weight_{j}.npy')
             layer_weights.append(weight)
+        # print(f"{layer_weights = }")
         additional_layers_weights.append(layer_weights)
 
     # Set the weights of the additional layers
@@ -51,7 +53,8 @@ def build_model(weights_folder):
 
 
 if __name__ == '__main__':
-    model = build_model()
+    weights_folder = 'weights'
+    model = build_model(weights_folder=weights_folder)
     model.summary()
     print('Model built successfully!')
     # Save the model to the models folder

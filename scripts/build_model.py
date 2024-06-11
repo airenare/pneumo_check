@@ -3,7 +3,7 @@ from tensorflow.keras.applications.inception_v3 import InceptionV3
 from tensorflow.keras import layers, Model
 
 
-def build_model():
+def build_model(weights_folder):
     image_height, image_width = 256, 256
 
     # Load the pre-trained InceptionV3 model
@@ -37,7 +37,7 @@ def build_model():
     for i in range(4):  # Get the last 4 layers (Flatten, Dense, Dropout, Dense)
         layer_weights = []
         for j in range(len(model.layers[-4:][i].get_weights())):
-            weight = np.load(f'../app/model/weights/additional_layer_{i}_weight_{j}.npy')
+            weight = np.load(f'{weights_folder}/additional_layer_{i}_weight_{j}.npy')
             layer_weights.append(weight)
         additional_layers_weights.append(layer_weights)
 
@@ -51,7 +51,8 @@ def build_model():
 
 
 if __name__ == '__main__':
-    model = build_model()
+    weights_folder = '../app/model/weights'
+    model = build_model(weights_folder=weights_folder)
     model.summary()
     print('Model built successfully!')
     # Save the model to the models folder
