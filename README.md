@@ -52,12 +52,12 @@ The best-performing model achieved:
 
 ## Web Application
 A [Streamlit](https://streamlit.io/) web application is provided to demonstrate the model's capabilities. Users can upload chest X-ray images, and the app will predict whether the image shows normal lungs or pneumonia.
-
+![App_screenshot](https://github.com/airenare/pneumonia_xray/blob/main/app/app_screenshot.png?raw=true)
 ### Running the App
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/pneumonia-detection.git
-   cd pneumonia-detection
+   git clone https://github.com/airenare/pneumonia_xray.git
+   cd pneumonia_xray
    ```
 2. Install the required packages:
 ```
