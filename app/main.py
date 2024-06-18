@@ -46,7 +46,7 @@ st.sidebar.markdown("""
         color: #aaaaaa;
     }
     </style>
-    """, unsafe_allow_html=True)
+`    """, unsafe_allow_html=True)
 
 st.sidebar.markdown('<div class="footer">© Anton Bakulin 2024</div>', unsafe_allow_html=True)
 
