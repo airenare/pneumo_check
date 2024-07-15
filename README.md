@@ -42,7 +42,7 @@ Models were evaluated using confusion matrices and metrics such as accuracy, pre
 
 All possible classification cutoff points were assessed, and the best one was determined to be 0.24:
 
-![Cutoff](https://github.com/airenare/pneumonia_xray/blob/main/app/performance_hist.png?raw=true)
+![Cutoff](https://github.com/airenare/pneumonia_xray/blob/main/app/pictures/performance_hist.png?raw=true)
 
 The best-performing model achieved:
 - **Accuracy**: 0.96
@@ -51,11 +51,11 @@ The best-performing model achieved:
 - **F1-score**: 0.96
 - **ROC-AUC**: 0.984
 
-![ROC](https://github.com/airenare/pneumonia_xray/blob/main/app/ROC_curve.png?raw=true)
+![ROC](https://github.com/airenare/pneumonia_xray/blob/main/app/pictures/ROC_curve.png?raw=true)
 
 ## Web Application
 A [Streamlit](https://streamlit.io/) web application is provided to demonstrate the model's capabilities. Users can upload chest X-ray images, and the app will predict whether the image shows normal lungs or pneumonia.
-![App_screenshot](https://github.com/airenare/pneumonia_xray/blob/main/app/app_screenshot.png?raw=true)
+![App_screenshot](https://github.com/airenare/pneumonia_xray/blob/main/app/pictures/app_screenshot.png?raw=true)
 ### Running the App
 1. Clone the repository:
    ```bash
