@@ -38,7 +38,7 @@ Multiple CNN architectures were explored, including baseline models, deeper arch
 
 ## Evaluation
 Models were evaluated using confusion matrices and metrics such as accuracy, precision, recall, F1-score, and ROC-AUC. 
-![CM](https://github.com/airenare/pneumonia_xray/blob/main/app/confusion_matrix.png?raw=true)
+![CM](https://github.com/airenare/pneumonia_xray/blob/main/app/pictures/confusion_matrix.png?raw=true)
 
 All possible classification cutoff points were assessed, and the best one was determined to be 0.24:
 
