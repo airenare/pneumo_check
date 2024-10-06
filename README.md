@@ -68,5 +68,6 @@ pip install -r requirements.txt
 ```
 3. Run the Streamlit app
 ```
-streamlit run app/main.py
+cd  app
+streamlit run main.py
 ```
